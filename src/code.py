@@ -10,13 +10,6 @@ import seaborn as sns
 
 if __name__ == '__main__':
     df = pd.read_pickle('../data/pickled_listings_df')
-    print(df.head())
-
-
-
-
-
-
 
 
 

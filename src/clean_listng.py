@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
 def select_cols(df, columns_to_keep):
     '''
@@ -54,7 +55,7 @@ def to_float(df, cols):
         df[c] = df[c].replace({'\$':'', ',':''}, regex = True).astype(float)
     return df
 
-##### WHERE STANDARDIZING STARTS 
+##### WHERE HOT-ENCODE/STANDARDIZE STARTS 
 
 def NaN_to_None(df, cols):
     '''
@@ -87,6 +88,9 @@ def NaN_to_zero(df):
     df: 
     '''
     df['review_scores_rating'].fillna(value=0, inplace=True)
+    df['bedrooms'].fillna(value=0, inplace=True)
+    df['bathrooms'].fillna(value=0, inplace=True)  
+    df['beds'].fillna(value=0, inplace=True)     
     return df
 
 def host_in_Denver(df):
@@ -105,7 +109,7 @@ def host_in_Denver(df):
     df['host_loc_denver'] = df['host_location'].map(lambda x: 1.0 if x == 'Denver, Colorado, United States' else 0.0)
     return df
 
-def true_false_standardize(df):
+def true_false_hot_enconde(df):
     '''
     Desc.
     
@@ -243,6 +247,25 @@ def add_violation_col(df):
     df['is_violating'] = df['listing_url'].map(lambda x: 1.0 if x in violater else 0.0) 
     return df
 
+def standardize_pricing(df,cols):
+    '''
+    Desc.
+    
+    Parameters
+    ----------
+    df: 
+    cols: 
+
+    Returns
+    ----------
+    df: 
+    '''
+    features = df[cols]
+    scaler = StandardScaler().fit(features.values)
+    features = scaler.transform(features.values)
+    df[cols] = features
+    return df
+
 def save(df):
      df.to_pickle('../data/pickled_listings_df')
 
@@ -265,7 +288,7 @@ if __name__ == '__main__':
     
     ### CLEAN END
 
-    ### STANDARDIZING START
+    ### HOT-ENCODE/STANDARDIZE START
 
     text_cols = ['summary', 'space', 'description', 'notes', 'access', 'interaction', 'house_rules', 'host_about']
     violater = ['https://www.airbnb.com/rooms/2086', 'https://www.airbnb.com/rooms/36026536',
@@ -318,10 +341,11 @@ if __name__ == '__main__':
                 'https://www.airbnb.com/rooms/14125469', 'https://www.airbnb.com/rooms/16497996',
                 'https://www.airbnb.com/rooms/16443175', 'https://www.airbnb.com/rooms/16392236',
                 'https://www.airbnb.com/rooms/16299372']
+    standardize_cols = ['price', 'weekly_price', 'monthly_price']
 
     df = NaN_to_None(df, text_cols)
     df = host_in_Denver(df)
-    df = true_false_standardize(df)
+    df = true_false_hot_enconde(df)
     df = in_top_10_neighbourhood(df)
     df = listing_location(df)
     df = fill_NaN_pricing(df)
@@ -330,8 +354,9 @@ if __name__ == '__main__':
     df = current_license(df)
     df = drop_cols(df)
     df = add_violation_col(df)
+    df = standardize_pricing(df,standardize_cols)
 
-    ### STANDARDIZING END
+    ### HOT-ENCODE/STANDARDIZE END
     save(df)
 
 
