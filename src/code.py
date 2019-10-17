@@ -5,12 +5,27 @@ import seaborn as sns
 
 ### Functions
 
+def num_only_df(df):
+    num_only_df = df[['price', 'weekly_price', 'monthly_price', 'accommodates', 'bathrooms', 'bedrooms', 'beds', 
+                'minimum_nights', 'maximum_nights', 'review_scores_rating', 
+                'calculated_host_listings_count_entire_homes','calculated_host_listings_count_private_rooms', 
+                'calculated_host_listings_count_shared_rooms', 'host_loc_denver', 'is_superhost', 'needs_license', 
+                'in_top_10_neighbourhood', 'room_type_Entire home/apt', 'room_type_Private room',
+                'room_type_Shared room', 'current_license', 'list_loc_denver']]
+    return num_only_df
 
+def few_categorical_df(df):
+    few_categorical_df = df[['price', 'minimum_nights', 'maximum_nights','review_scores_rating','host_loc_denver', 
+                            'needs_license','room_type_Entire home/apt', 'room_type_Private room',
+                            'room_type_Shared room', 'current_license', 'list_loc_denver']]
+    return few_categorical_df
 
 
 if __name__ == '__main__':
     df = pd.read_pickle('../data/pickled_listings_df')
 
+    num_only_df = num_only_df(df)
+    few_categorical_df = few_categorical_df(df)
 
 
 
