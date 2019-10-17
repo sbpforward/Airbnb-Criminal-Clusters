@@ -1,6 +1,105 @@
-## Airbnb in Denver: This is Why We Can't Have Nice Things
+## Airbnb in Denver: Identifying the Criminal Clusters
 ### Sarah Forward
 
+TITLE
+------
+Building upon my [first capstone](https://github.com/sbpforward/Airbnb-in-Denver) where I conducted an initial exploratory data analysis, I decided to continue the search to determine whether or not I could predict a particular Airbnb listing was in violation of [Denver's Short-Term Rental license](https://www.denvergov.org/content/denvergov/en/denver-business-licensing-center/business-licenses/short-term-rentals/short-term-rental-faq.html).
+
+Quick review: To obtain a Short-Term Rental license in Denver...
+
++ You must be a legal resident of the United States.
++ **The property must be your primary residence.**
++ **If the property is owned by an LLC, the applicant must be the owner of that of that entity.**
++ If the property is leased, a copy of the lease with the landlord's approval to use the property as a short-term rental
++ Must have some kind of Colorado State approved ID w/ the address along with vehicle regristration, tax documents, or utility bill — all with the same, Colorado address. 
++ You must possess all applicable Business Tax licenses, including the Lodger’s Tax.
++ Tax License Application
++ Check with your insurance carrier to ensure that your STR is covered.
+
+The Data
+------
+I found my data from [Inside Airbnb](http://insideairbnb.com/about.html). It's owner and moderator, Murray Cox, is an Austrailian-native-turned-New-York-transplant who runs the independent, non-commercial site as a tool to help discover "how Airbnb is really being used in cities around the world."
+
+He's been scraping publicly available data on Airbnb from more than 100 cities around the world. You can get listings, calendar dates and availability, and reviews for cities like Amsterdam, Barcelona, Cape Town, Hong Kong, and, of course, Denver.
+
+There are 4,511 listings and 106 rows in the original dataset. I kept columns that I believed to be most relevant about the listing and the host such as:
+
++ Listing ID & URL
++ Listing location
++ Details like room type, number of rooms throughout the house
++ Do they require a license? (i.e., Campers/RVs do not)
++ Is their license information listed?
++ What neighbourhood it's in
++ Daily/Monthly/Weekly pricing
++ Host ID & Location
++ Host About 
++ Total listings the host has and by type of place
++ Is the host a Superhost?
+
+Updating The Data
+------
++ Pricing - dailiy, weekly, monthly
++ Host locations: You're supposed to live in Denver as your "primary residence", Over 166 locations, 21 of which are not in the united states 
+- Gibraltar, Spain, United Kingdom, Vietnam, Isreal, Austrailia
+
+## SEE IF I CAN DO A WORLD MAP WITH GEOPANDAS ##
+
+Filling NaNs to Nones
+    text_cols = ['summary', 'space', 'description', 'notes', 'access', 'interaction', 'house_rules', 'host_about']
+
+Hot Encoded:
++ Host location: 1 - Yes, in Denver // 0 - No, somewhere else
++ Host Superhost?:  1 - Yes // 0 - No
++ Is the listing location in Denver?: 1 - Yes // 0 - No
+Denver
+Englewood
+Lakewood
+nan
+Wheat Ridge
+Aurora
+Littleton
+Stapleton
+Denver
+
++ Listing requires license?: 1 - Yes // 0 - No
++ Listing in one of the top 10 neighborhoods?: 1 - Yes // 0 - No
+## Maybe the chart? ##
++ Current license: 1 - Yes // 0 - No
+<image of what it looks like>
+<also that people put it in the wrong place>
+
+Room Type Dummies: Entire room, private room, shared room?
+
+
+Description of raw data	
+0: Mentioned in passing - no idea of what the features are, where it came from, how it was obtained.
+1: Just a few features, the source described in text (but no images of raw data.)
+2: Source described, walk through exemplary features and rows, appropriate tables/screenshots.
+
+Exploratory Data Analysis	
+0: Who needs to understand the data, anyway?
+1: Perfunctory - general pair-wise scatter matrix that says..what?
+2: Documentation of interesting relationships between the features and target.
+3: All previous and with thoughtful feature engineering.
+
+Analysis (e.g cleaning pipeline, modeling, validation of model, presentation of results)	
+0: None
+1: Approach invalid/unsuited to problem.
+2: Brief description focused on results without any explanation of approach/method.
+3: Clearly explained process that my be slightly incomplete or with minor errors.
+4: Clearly explained with no/few errors.
+5: Impressive effort.
+
+README	
+0: Missing or useless in describing project.
+1: Misspellings, hard to read font, strange formatting, ugly screenshots, inconsistent text sizes, wall-of-text.
+2: Generally pleasing that describes project well, good illustrations, a few minor issues.
+3: Beautiful and an impressive showcase for the project with good organization, appropriate use of text and illustrations, and helpful references.f
+
+
+
+
+#### OLD README BELOW
 Background
 ------
 I have been an Airbnb host in Denver for the last year and half. It's been a great source of mostly passive income and about 95% of our guests are pretty easy going. When I first discovered the data, I was interested in finding out:
