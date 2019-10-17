@@ -2,277 +2,280 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
-def select_cols(df, columns_to_keep):
-    '''
-    Returns pandas DataFrame with desired columns.
+class Clean():
     
-    Parameters
-    ----------
-    df: pandas.DataFrame
-        DataFrame produced by the listings.csv file.
-    cols: list
+    def __init__(self, df):
+        self.df = df  
 
-    Returns
-    ----------
-    df: pandas.DataFrame
-        DataFrame that consists only of the columns passed through.
+    def select_cols(self, columns_to_keep):
+        '''
+        Returns pandas DataFrame with desired columns.
+        
+        Parameters
+        ----------
+        df: pandas.DataFrame
+            DataFrame produced by the listings.csv file.
+        cols: list
 
-    '''
-    columns_to_drop = []
-    for x in df.columns:
-        if x not in columns_to_keep:
-            columns_to_drop.append(x)
-    df.drop(columns_to_drop, inplace=True, axis=1)
-    return df
+        Returns
+        ----------
+        df: pandas.DataFrame
+            DataFrame that consists only of the columns passed through.
 
+        '''
+        columns_to_drop = []
+        for x in self.df.columns:
+            if x not in columns_to_keep:
+                columns_to_drop.append(x)
+        self.df.drop(columns_to_drop, inplace=True, axis=1)
 
-def to_float(df, cols):
-    '''
-    Converts specifified column to float type.
+    def to_float(self, cols):
+        '''
+        Converts specifified column to float type.
 
-    Parameters
-    ----------
-    df: pandas.DataFrame
-        Passes the DataFrame that was recently updated to have the
-        desired columns.
+        Parameters
+        ----------
+        df: pandas.DataFrame
+            Passes the DataFrame that was recently updated to have the
+            desired columns.
 
-    cols: list
-        List of strings of the column names that need to be 
-        converted to float.
-        =============
-        price
-        weekly_price
-        monthly_price
-        =============
+        cols: list
+            List of strings of the column names that need to be 
+            converted to float.
+            =============
+            price
+            weekly_price
+            monthly_price
+            =============
 
-    Returns
-    ----------
-    df: pandas.DataFrame
-        Updated DataFrame that updates the 'price' column datatype from a
-        string to a float datatype.
-    '''
-    for c in cols:
-        df[c] = df[c].replace({'\$':'', ',':''}, regex = True).astype(float)
-    return df
+        Returns
+        ----------
+        df: pandas.DataFrame
+            Updated DataFrame that updates the 'price' column datatype from a
+            string to a float datatype.
+        '''
+        for c in cols:
+            self.df[c] = self.df[c].replace({'\$':'', ',':''}, regex = True).astype(float)
 
-##### WHERE HOT-ENCODE/STANDARDIZE STARTS 
+    ##### WHERE HOT-ENCODE/STANDARDIZE STARTS 
 
-def NaN_to_None(df, cols):
-    '''
-    Covert NaN's to 'none'.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def NaN_to_None(self, cols):
+        '''
+        Covert NaN's to 'none'.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    for col in cols:
-        df[col].fillna('none', inplace=True)
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        for col in cols:
+            self.df[col].fillna('none', inplace=True)
 
-def NaN_to_zero(df):
-    '''
-    Covert NaN's to 'none'.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def NaN_to_zero(self):
+        '''
+        Covert NaN's to 'none'.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df['review_scores_rating'].fillna(value=0, inplace=True)
-    df['bedrooms'].fillna(value=0, inplace=True)
-    df['bathrooms'].fillna(value=0, inplace=True)  
-    df['beds'].fillna(value=0, inplace=True)     
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        self.df['review_scores_rating'].fillna(value=0, inplace=True)
+        self.df['bedrooms'].fillna(value=0, inplace=True)
+        self.df['bathrooms'].fillna(value=0, inplace=True)  
+        self.df['beds'].fillna(value=0, inplace=True)     
 
-def host_in_Denver(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def host_in_Denver(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df['host_loc_denver'] = df['host_location'].map(lambda x: 1.0 if x == 'Denver, Colorado, United States' else 0.0)
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        self.df['host_loc_denver'] = self.df['host_location'].map(lambda x: 1.0 if x == 'Denver, Colorado, United States' else 0.0)
 
-def true_false_hot_enconde(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def true_false_hot_enconde(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df['is_superhost'] = df['host_is_superhost'].map(lambda x: 1.0 if x == 't' else 0.0) 
-    df['needs_license'] = df['requires_license'].map(lambda x: 1.0 if x == 't' else 0.0) 
-    return df 
+        Returns
+        ----------
+        df: 
+        '''
+        self.df['is_superhost'] = self.df['host_is_superhost'].map(lambda x: 1.0 if x == 't' else 0.0) 
+        self.df['needs_license'] = self.df['requires_license'].map(lambda x: 1.0 if x == 't' else 0.0) 
 
-def in_top_10_neighbourhood(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def in_top_10_neighbourhood(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df_prop_type_per_hood = df.groupby(['neighbourhood_cleansed','room_type']).size().to_frame('count').reset_index()
-    df_hoodtop10 = df_prop_type_per_hood.groupby(['neighbourhood_cleansed'])['count'].sum().sort_values(ascending=False)
-    df_hoodtop10 = df_hoodtop10.iloc[0:10].reset_index()
-    top10neighborhoods = df_hoodtop10['neighbourhood_cleansed'].tolist()
-    df['in_top_10_neighbourhood'] = df['neighbourhood_cleansed'].map(lambda x: 1.0 if x in top10neighborhoods else 0.0) 
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        df_prop_type_per_hood = self.df.groupby(['neighbourhood_cleansed','room_type']).size().to_frame('count').reset_index()
+        df_hoodtop10 = df_prop_type_per_hood.groupby(['neighbourhood_cleansed'])['count'].sum().sort_values(ascending=False)
+        df_hoodtop10 = df_hoodtop10.iloc[0:10].reset_index()
+        top10neighborhoods = df_hoodtop10['neighbourhood_cleansed'].tolist()
+        self.df['in_top_10_neighbourhood'] = self.df['neighbourhood_cleansed'].map(lambda x: 1.0 if x in top10neighborhoods else 0.0) 
 
-def listing_location(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def listing_location(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df['list_loc_denver'] = df['city'].map(lambda x: 1.0 if x == 'Denver' else 0.0) 
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        self.df['list_loc_denver'] = self.df['city'].map(lambda x: 1.0 if x == 'Denver' else 0.0) 
 
-def fill_NaN_pricing(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def fill_NaN_pricing(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df['weekly_price'].fillna(value=df['price']*7, inplace=True)
-    df['monthly_price'].fillna(value=df['price']*30, inplace=True)
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        self.df['weekly_price'].fillna(value=self.df['price']*7, inplace=True)
+        self.df['monthly_price'].fillna(value=self.df['price']*30, inplace=True)
 
-def room_type_dummies(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def room_type_dummies(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df = pd.get_dummies(df, columns=['room_type'])
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        self.df = pd.get_dummies(self.df, columns=['room_type'])
 
-def current_license(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def current_license(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df['license'].fillna(0, inplace=True)
-    searchString = "2019"
-    find_current_df = df.loc[df['license'].str.contains(searchString, regex=False, na=False)]
-    current_lst = find_current_df['license'].tolist()
-    df['current_license'] = df['license'].map(lambda x: 1.0 if x in current_lst else 0.0) 
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        self.df['license'].fillna(0, inplace=True)
+        searchString = "2019"
+        find_current_df = self.df.loc[df['license'].str.contains(searchString, regex=False, na=False)]
+        current_lst = find_current_df['license'].tolist()
+        self.df['current_license'] = self.df['license'].map(lambda x: 1.0 if x in current_lst else 0.0) 
 
-def drop_cols(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def drop_cols(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df.drop(columns=['host_location', 'host_is_superhost', 'city', 'requires_license', 'license'], axis=1, inplace=True)
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        self.df.drop(columns=['host_location', 'host_is_superhost', 'city', 'requires_license', 'license'], axis=1, inplace=True)
 
-def add_violation_col(df):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def add_violation_col(self):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    df['is_violating'] = df['listing_url'].map(lambda x: 1.0 if x in violater else 0.0) 
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        self.df['is_violating'] = self.df['listing_url'].map(lambda x: 1.0 if x in violater else 0.0) 
 
-def standardize_pricing(df,cols):
-    '''
-    Desc.
-    
-    Parameters
-    ----------
-    df: 
-    cols: 
+    def standardize_pricing(self,cols):
+        '''
+        Desc.
+        
+        Parameters
+        ----------
+        df: 
+        cols: 
 
-    Returns
-    ----------
-    df: 
-    '''
-    features = df[cols]
-    scaler = StandardScaler().fit(features.values)
-    features = scaler.transform(features.values)
-    df[cols] = features
-    return df
+        Returns
+        ----------
+        df: 
+        '''
+        features = self.df[cols]
+        scaler = StandardScaler().fit(features.values)
+        features = scaler.transform(features.values)
+        self.df[cols] = features
 
-def save(df):
-     df.to_pickle('../data/pickled_listings_df')
+    def clean_roundup(self):
+        self.host_in_Denver()
+        self.true_false_hot_enconde()
+        self.in_top_10_neighbourhood()
+        self.listing_location()
+        self.fill_NaN_pricing()
+        self.NaN_to_zero()
+        self.room_type_dummies()
+        self.current_license()
+        self.drop_cols()
+        self.add_violation_col()
+
+    def save(self):
+        self.df.to_pickle('../data/pickled_listings_df')
 
 if __name__ == '__main__':
     df = pd.read_csv('../data/listings.csv')
 
-    ### CLEAN START
+    clean = Clean(df)
+
     columns_to_keep = ['id', 'listing_url', 'summary', 'space', 'description', 'notes', 'access', 'interaction', 
                        'house_rules', 'host_id', 'host_url','host_location', 
                        'host_about', 'host_is_superhost', 'neighbourhood_cleansed', 'city',
@@ -282,14 +285,6 @@ if __name__ == '__main__':
                        'calculated_host_listings_count_private_rooms', 'calculated_host_listings_count_shared_rooms']
 
     float_cols = ['price','weekly_price','monthly_price']
-    
-    df = select_cols(df, columns_to_keep)
-    df = to_float(df, float_cols)
-    
-    ### CLEAN END
-
-    ### HOT-ENCODE/STANDARDIZE START
-
     text_cols = ['summary', 'space', 'description', 'notes', 'access', 'interaction', 'house_rules', 'host_about']
     violater = ['https://www.airbnb.com/rooms/2086', 'https://www.airbnb.com/rooms/36026536',
                 'https://www.airbnb.com/rooms/30991941', 'https://www.airbnb.com/rooms/36110171', 
@@ -343,23 +338,12 @@ if __name__ == '__main__':
                 'https://www.airbnb.com/rooms/16299372']
     standardize_cols = ['price', 'weekly_price', 'monthly_price']
 
-    df = NaN_to_None(df, text_cols)
-    df = host_in_Denver(df)
-    df = true_false_hot_enconde(df)
-    df = in_top_10_neighbourhood(df)
-    df = listing_location(df)
-    df = fill_NaN_pricing(df)
-    df = NaN_to_zero(df)
-    df = room_type_dummies(df)
-    df = current_license(df)
-    df = drop_cols(df)
-    df = add_violation_col(df)
-    df = standardize_pricing(df,standardize_cols)
-
-    ### HOT-ENCODE/STANDARDIZE END
-    save(df)
-
-
+    clean.select_cols(columns_to_keep)
+    clean.to_float(float_cols)
+    clean.NaN_to_None(text_cols)
+    clean.clean_roundup()
+    clean.standardize_pricing(standardize_cols)
+    clean.save()
 
 
 
