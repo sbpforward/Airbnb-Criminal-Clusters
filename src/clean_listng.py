@@ -344,6 +344,3 @@ if __name__ == '__main__':
     clean.clean_roundup()
     clean.standardize_pricing(standardize_cols)
     clean.save()
-
-
-
