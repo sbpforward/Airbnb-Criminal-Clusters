@@ -65,28 +65,27 @@ class Clean():
         
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame
+        cols: list
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame
         '''
         for col in cols:
             self.df[col].fillna('none', inplace=True)
 
     def NaN_to_zero(self):
         '''
-        Covert NaN's to 'none'.
+        Covert NaN's to zeros.
         
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame
         '''
         self.df['review_scores_rating'].fillna(value=0, inplace=True)
         self.df['bedrooms'].fillna(value=0, inplace=True)
@@ -95,47 +94,47 @@ class Clean():
 
     def host_in_Denver(self):
         '''
-        Desc.
-        
+        Hot encode if the host location is in Denver (1) or not (0).
+
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame
         '''
         self.df['host_loc_denver'] = self.df['host_location'].map(lambda x: 1.0 if x == 'Denver, Colorado, United States' else 0.0)
 
     def true_false_hot_enconde(self):
         '''
-        Desc.
+        Hot encodes if the host is a superhost an if listing requires a license — 
+        both (1) if yes, (0) if no.
         
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame
         '''
         self.df['is_superhost'] = self.df['host_is_superhost'].map(lambda x: 1.0 if x == 't' else 0.0) 
         self.df['needs_license'] = self.df['requires_license'].map(lambda x: 1.0 if x == 't' else 0.0) 
 
     def in_top_10_neighbourhood(self):
         '''
-        Desc.
+        Hot encode if the listing location is in the one of the top 10 highest listed neighbourhoods.
+        (1) if yes, (0) if no.
         
         Parameters
         ----------
-        df: 
+        df: pandas.DataFrame
         cols: 
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame
         '''
         df_prop_type_per_hood = self.df.groupby(['neighbourhood_cleansed','room_type']).size().to_frame('count').reset_index()
         df_hoodtop10 = df_prop_type_per_hood.groupby(['neighbourhood_cleansed'])['count'].sum().sort_values(ascending=False)
@@ -145,27 +144,27 @@ class Clean():
 
     def listing_location(self):
         '''
-        Desc.
-        
+        Hot encode if the listing location is in Denver.
+        (1) if yes, (0) if no.
+
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame 
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame 
         '''
         self.df['list_loc_denver'] = self.df['city'].map(lambda x: 1.0 if x == 'Denver' else 0.0) 
 
     def fill_NaN_pricing(self):
         '''
-        Desc.
+        Fill NaN values with the estimated pricing for the weekly and monthly rates based on 
+        the daily rate.
         
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame 
 
         Returns
         ----------
@@ -176,31 +175,30 @@ class Clean():
 
     def room_type_dummies(self):
         '''
-        Desc.
+        Get dummy variables for the three different room type options available — 
+        Entire home/apt, Private Room, Shared Room.
         
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame 
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame 
         '''
         self.df = pd.get_dummies(self.df, columns=['room_type'])
 
     def current_license(self):
         '''
-        Desc.
+        Create new column that identifies whether or not the license number is on the site and current.
         
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame 
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame 
         '''
         self.df['license'].fillna(0, inplace=True)
         searchString = "2019"
@@ -210,46 +208,44 @@ class Clean():
 
     def drop_cols(self):
         '''
-        Desc.
+        Remove duplicate columns orginally need to create the new hot-encoded or dummy columns.
         
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame 
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame 
         '''
         self.df.drop(columns=['host_location', 'host_is_superhost', 'city', 'requires_license', 'license'], axis=1, inplace=True)
 
     def add_violation_col(self):
         '''
-        Desc.
+        Create column that will display confirmed listings that are in violation of Denver's Short-Term Rental regulations.
         
         Parameters
         ----------
-        df: 
-        cols: 
+        df: pandas.DataFrame 
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame 
         '''
         self.df['is_violating'] = self.df['listing_url'].map(lambda x: 1.0 if x in violater else 0.0) 
 
     def standardize_pricing(self,cols):
         '''
-        Desc.
+        Standardize pricing columns
         
         Parameters
         ----------
-        df: 
+        df: pandas.DataFrame 
         cols: 
 
         Returns
         ----------
-        df: 
+        df: pandas.DataFrame
         '''
         features = self.df[cols]
         scaler = StandardScaler().fit(features.values)
