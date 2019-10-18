@@ -90,6 +90,9 @@ Cleaning the Data
 
 PCA
 -----
+
+![alt text](images/PCA_All-Features.png  "All Features")
+
 Wanting to get a better sense of my data structure and to see what features might be collinear, I used pricncipal component analysis. 
 
 
@@ -98,6 +101,28 @@ Wanting to get a better sense of my data structure and to see what features migh
 - Goal is to get the line with the largest sum of squared distances
 - Each line is called te eigenvector for that PC  
 - the proportion of each listing 
+
+![alt text](images/PCA_Fewer-Categorical-Features.png  "PCA_Fewer Categorical Features")
+
+![alt text](images/explained-variance.png  "explained-variance")
+
+KMeans Model
+-----
+![alt text](images/kmeans-clusters.png  "test")
+
+
+Evaluating the Model
+-----
+With KMeans, you'd usually check the model using an elbow plot or silhouette score.
+
+![alt text](images/clusters-by-target.png  "clusters-by-target")
+
+
+![alt text](images/post-kmeans-hunt.png  "post-kmeans-hunt")
+
+![alt text](images/post-kmeans-hunt-profile.png  "post-kmeans-hunt-profile")
+
+
 
 Analysis (e.g cleaning pipeline, modeling, validation of model, presentation of results)	
 0: None
