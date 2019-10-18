@@ -56,10 +56,6 @@ Based on my search, I identified 4 kinds of people who are in violation based on
 
 4. People who leave their location very broad by entering "Colorado" or "United States" and sometimes nothing at all.
 
------
-
-## SEE IF I CAN DO A WORLD MAP WITH GEOPANDAS ##
-
 Cleaning the Data
 ------
 + Listing ID & URL
@@ -85,61 +81,42 @@ Cleaning the Data
     + Requires license?
         + Campers/RVs do not
     + If required, is their license information listed AND current?
+        + 550 listings out of 4511 are current with "2019" in its designated position
+
 
 ![alt text](images/license-check.png  "Checking the license number")
 
 PCA
 -----
+Wanting to get a better sense of my data structure and to see what features might be collinear, I used pricncipal component analysis. At first I used all of the numerical columns in my dataset which... didn't tell me much.
 
 ![alt text](images/PCA_All-Features.png  "All Features")
 
-Wanting to get a better sense of my data structure and to see what features might be collinear, I used pricncipal component analysis. 
-
-
-- Taking 36 rows of data and making it a 2-D plot
-- Line fits the Data and the PCA projects data onto it, then measure the distances from the data to the line and try to find the line that minimizes the distnce, or maximizes the distance from the projected points to the origin
-- Goal is to get the line with the largest sum of squared distances
-- Each line is called te eigenvector for that PC  
-- the proportion of each listing 
+I removed half of the columns which included information I knew to be correlated such as the pricing (daily, weekly, monthly) and the number of bedrooms and bathrooms.
 
 ![alt text](images/PCA_Fewer-Categorical-Features.png  "PCA_Fewer Categorical Features")
 
-![alt text](images/explained-variance.png  "explained-variance")
-
 KMeans Model
 -----
-After diving into my PCA, I entered the principal component values in to my KMeans model to see if I could find patterns based the  on their similiarity. 
-
-
- Clustering is an unsupervised learning algorithm that tries to cluster data based on their similarity. Unsupervised learning means that there is no outcome to be predicted, and the algorithm just tries to find
- patterns in the data. In k means clustering, we have the specify the number of clusters we want the data to be grouped into. The algorithm randomly assigns each observation to a cluster, and finds the centroid of each cluster. Then, the algorithm iterates through two steps: Reassign data points to the cluster whose centroid is closest. Calculate new centroid of each cluster. These two steps are repeated till the within cluster variation cannot be reduced any further. The within cluster variation is calculated as the sum of the euclidean distance between the data points and their respective cluster centroids.
+After diving into my PCA, I entered the principal component values in to my KMeans model to see if I could find patterns based on their similiarity. 
 
 ![alt text](images/kmeans-clusters.png  "test")
 
-
 Evaluating the Model
 -----
-With KMeans, you'd usually check the model using an elbow plot or silhouette score.  
+With KMeans, you'd usually check the model using an elbow plot or silhouette score, but I used the 100 target variables I created to help visualize which cluster had the greatest count of Denver's violators.
+
+After playing with the number of clusters, I found 8 to be the sweet spot. When first trying 3 clusters, there was a clear winner but each column was super dense. At 10, it was too spread a litte too thin.
 
 ![alt text](images/clusters-by-target.png  "clusters-by-target")
 
+Cluster 5 had the largest weight of violators so my next step was to dig in to see the what these listings were! Just going through a few, I noticed there were a lot more people an empty "Host Location" than those in another city entirely. 
 
 ![alt text](images/post-kmeans-hunt.png  "post-kmeans-hunt")
 
 ![alt text](images/post-kmeans-hunt-profile.png  "post-kmeans-hunt-profile")
 
 
-
-Analysis (e.g cleaning pipeline, modeling, validation of model, presentation of results)	
-0: None
-1: Approach invalid/unsuited to problem.
-2: Brief description focused on results without any explanation of approach/method.
-3: Clearly explained process that my be slightly incomplete or with minor errors.
-4: Clearly explained with no/few errors.
-5: Impressive effort.
-
-README	
-0: Missing or useless in describing project.
-1: Misspellings, hard to read font, strange formatting, ugly screenshots, inconsistent text sizes, wall-of-text.
-2: Generally pleasing that describes project well, good illustrations, a few minor issues.
-3: Beautiful and an impressive showcase for the project with good organization, appropriate use of text and illustrations, and helpful references.f
+Final Thoughts + Next Steps
+-----
+In order to get a true accuracy score, I'd have to go through every listing and verify it myself. While I'd love to be able to predict a definitive "yes" or "no" on whether a listing is violating Denver's Airbnb Short-Term Rental regulations, I beleive this could be a good start to pointing Denver's Department of Excise and Licenses on where to start their search.
