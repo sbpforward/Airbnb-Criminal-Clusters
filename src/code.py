@@ -191,14 +191,14 @@ def plot_KMeans(few_principalComponents):
     ----------
     plt: image
     '''
-    kmeans = KMeans(n_clusters=10)
+    kmeans = KMeans(n_clusters=8)
     X_clustered_num = kmeans.fit_predict(few_principalComponents)
 
     # Plot the scatter diagram
     plt.figure(figsize = (7,7))
     plt.scatter(few_principalComponents[:,0],few_principalComponents[:,1], 
                 c=kmeans.labels_,cmap='rainbow', alpha=0.5) 
-    plt.title('KMeans Clusters (10)')
+    plt.title('KMeans Clusters (8)')
     # plt.savefig('kmeans-clusters.png')
     # plt.show()
 
